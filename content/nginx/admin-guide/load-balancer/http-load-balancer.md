@@ -20,7 +20,7 @@ NGINX and NGINX Plus can be used in different deployment scenarios as a [very ef
 
 
 <span id="proxy_pass"></span>
-## Proxying HTTP Traffic to a Group of Servers
+## Proxy HTTP Traffic to a Group of Servers
 
 To start using NGINX Plus or NGINX Open Source to load balance HTTP traffic to a group of servers, first you need to define the group with the [`upstream`](https://nginx.org/en/docs/http/ngx_http_upstream_module.html#upstream) directive. The directive is placed in the [`http`](https://nginx.org/en/docs/http/ngx_http_core_module.html#http) context.
 
@@ -66,7 +66,7 @@ http {
 
 
 <span id="method"></span>
-## Choosing a Load-Balancing Method
+## Choose a Load-Balancing Method
 
 NGINX Open Source supports four load‑balancing methods, and NGINX Plus adds two more methods:
 
@@ -195,7 +195,7 @@ Note that if there is only a single server in a group, the [`max_fails`](https:/
 
 
 <span id="sticky"></span>
-## Enabling Session Persistence
+## Enable Session Persistence
 
 Session persistence means that NGINX Plus identifies user sessions and routes all requests in a given session to the same upstream server.
 
@@ -266,7 +266,7 @@ NGINX Plus supports three session persistence methods. The methods are set with 
 
 
 <span id="maxconns"></span>
-## Limiting the Number of Connections
+## Limit the Number of Connections
 
 With NGINX Plus, it is possible to limit the number of active connections to an upstream server by specifying the maximum number with the [`max_conns`](https://nginx.org/en/docs/http/ngx_http_upstream_module.html#max_conns) parameter.
 
@@ -286,7 +286,7 @@ Note that the `max_conns` limit is ignored if there are idle [`keepalive`](https
 
 
 <span id="health"></span>
-## Configuring Health Checks
+## Configure Health Checks
 
 NGINX can continually test your HTTP upstream servers, avoid the servers that have failed, and gracefully add the recovered servers into the load‑balanced group.
 
@@ -294,7 +294,7 @@ See [HTTP Health Checks]({{< ref "nginx/admin-guide/load-balancer/http-health-ch
 
 
 <span id="zone"></span>
-## Sharing Data with Multiple Worker Processes
+## Share Data with Multiple Worker Processes
 
 If an [`upstream`](https://nginx.org/en/docs/http/ngx_http_upstream_module.html#upstream) block does not include the [`zone`](https://nginx.org/en/docs/http/ngx_http_upstream_module.html#zone) directive, each worker process keeps its own copy of the server group configuration and maintains its own set of related counters. The counters include the current number of connections to each server in the group and the number of failed attempts to pass a request to a server. As a result, the server group configuration cannot be modified dynamically.
 
@@ -302,13 +302,13 @@ When the `zone` directive is included in an `upstream` block, the configuration 
 
 The `zone` directive is mandatory for [active health checks](#health_active) and [dynamic reconfiguration]({{< ref "dynamic-configuration-api.md" >}}) of the upstream group. However, other features of upstream groups can benefit from the use of this directive as well.
 
-For example, if the configuration of a group is not shared, each worker process maintains its own counter for failed attempts to pass a request to a server (set by the [max_fails](#health_passive) parameter). In this case, each request gets to only one worker process. When the worker process that is selected to process a request fails to transmit the request to a server, other worker processes don’t know anything about it. While some worker process can consider a server unavailable, others might still send requests to this server. For a server to be definitively considered unavailable, the number of failed attempts during the timeframe set by the `fail_timeout` parameter must equal `max_fails` multiplied by the number of worker processes. On the other hand, the `zone` directive guarantees the expected behavior.
+For example, if the configuration of a group is not shared, each worker process maintains its own counter for failed attempts to pass a request to a server (set by the [`max_fails`](#health_passive) parameter). In this case, each request gets to only one worker process. When the worker process that is selected to process a request fails to transmit the request to a server, other worker processes don’t know anything about it. While some worker process can consider a server unavailable, others might still send requests to this server. For a server to be definitively considered unavailable, the number of failed attempts during the timeframe set by the `fail_timeout` parameter must equal `max_fails` multiplied by the number of worker processes. On the other hand, the `zone` directive guarantees the expected behavior.
 
 Similarly, the [Least Connections](#method) load‑balancing method might not work as expected without the `zone` directive, at least under low load. This method passes a request to the server with the smallest number of active connections. If the configuration of the group is not shared, each worker process uses its own counter for the number of connections and might send a request to the same server that another worker process just sent a request to.  However, you can increase the number of requests to reduce this effect. Under high load requests are distributed among worker processes evenly, and the `Least Connections` method works as expected.
 
 
 <span id="zone-size"></span>
-### Setting the Zone Size
+### Set the Zone Size
 
 It is not possible to recommend an ideal memory‑zone size, because usage patterns vary widely. The required amount of memory is determined by which features (such as [session persistence](#sticky), [health checks](#health_active), or [DNS re‑resolving](#resolve)) are enabled and how the upstream servers are identified.
 
@@ -355,7 +355,7 @@ If a domain name resolves to several IP addresses, the addresses are saved to th
 
 
 <span id="ntlm"></span>
-## Load Balancing of Microsoft Exchange Servers
+## Load Balance Microsoft Exchange Servers
 
 In [NGINX Plus Release 7](https://docs.nginx.com/nginx/releases/#nginxplus-release7-r7) and later, NGINX Plus can proxy Microsoft Exchange traffic to a server or a group of servers and load balance it.
 
